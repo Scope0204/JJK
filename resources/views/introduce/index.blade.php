@@ -1,27 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
+@extends('layouts.introduce')
+@section('content')
      <div>
         <h1>회원 소개</h1>
         <hr />
-        @forelse ($introduces as $introduce)
-            <li>{{ $introduce->name }}</li>
-            <li>{{ $introduce->birth }}</li>
-            <li>{{ $introduce->number }}</li>
-            <li>{{ $introduce->email }}</li>
-            <li>{{ $introduce->email }}</li>
-            <img src="{{ $introduce->photo }}" alt="photo x">
+        <div class='main'>
+        @forelse ($introduces as $introduce )
+            <li>{{ $introduce->userId }}</li>
+            <li>{{ $introduce->intro }}</li>
+            <li>{{ $introduce->goal }}</li>
+            <img src="/images/{{ $introduce->photo }}" alt="photo x">
         @empty
             <p>No users</p>
         @endforelse
+
         <br>
-        <button>수정하기</button>
-    </div>
-</body>
-</html>
+        <button class='creBtn'>등록하기</button>
+        <button class='fixBtn'>수정하기</button>
+        <button class='delBtn'>삭제하기</button>
+        </div>
+     </div>
+@stop
+
+@section('script')
+    <script>
+    $.ajaxSetup({
+        headers:{
+            'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $('.delBtn').on('click', function(e){
+        var Member = '{{ $introduce->id }}'
+    if(confirm('삭제하시겠습니까?')){
+        $.ajax({
+            type: 'DELETE',
+            url: '/introduce/' + Member
+            }).then(function() {
+                window.location.href = '/introduce';
+            });
+        }
+     });   
+    </script>
+@stop
+
+
+

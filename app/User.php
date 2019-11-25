@@ -1,5 +1,55 @@
 <?php
+namespace App;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+class User extends Authenticatable
+{
+    use Notifiable;
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'userId', 'email', 'password',
+    ];
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token', 'admin',
+    ];
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'admin' => 'boolean',
+    ];
 
+    public function questions(){
+        return $this->hasMany(Question::class);
+    }
+
+    public function answers(){
+        return $this->hasMany(Answer::class);
+    }
+
+    public function members(){
+        return $this->hasOne(\App\Member::class);
+    }
+
+    
+}
+
+?>
+
+<!-- 
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -15,14 +65,10 @@ class User extends Authenticatable
      *
      * @var array
      */
+    public $timestamps = false;
     protected $fillable = [
-        'name', 'birth' ,'number','email', 'password','photo'
+        'name', 'email', 'password','admin'
     ];
-
-    public function getImageAttribute()
-    {
-        return $this->photo;
-    }
 
     /**
      * The attributes that should be hidden for arrays.
@@ -30,7 +76,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password'
+        'password', 'remember_token',
     ];
 
     /**
@@ -39,6 +85,15 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-    
+        'email_verified_at' => 'datetime',
     ];
-}
+
+    public function questions(){
+        return $this->hasMany(Question::class);
+    }
+
+    public function answers(){
+        return $this->hasMany(Answer::class);
+    }
+    
+} --> 

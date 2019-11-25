@@ -1,9 +1,9 @@
-<?php
 
+
+<?php
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
 class CreateUsersTable extends Migration
 {
     /**
@@ -12,20 +12,18 @@ class CreateUsersTable extends Migration
      * @return void
      */
     public function up()
-    {   
-        //id, password , birth , number , email , 사진
+    {
         Schema::create('users', function (Blueprint $table) {
-            $table->bigIncrements('id'); //id 값 
-            $table->string('name'); // 이름 
-            $table->string('birth'); // 생일
-            $table->string('number'); // 전화번호
-            $table->string('email')->unique(); //이메일
-            $table->string('password'); // 비번
-            $table->timestamps(); 
-            $table->string('photo')->nullable();
+            $table->bigIncrements('id'); // 원래 count
+            $table->string('userId')->unique(); // 원래 id 
+            $table->string('email');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->boolean('admin')->default(0);
+            $table->rememberToken();
+            $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      *
@@ -36,3 +34,4 @@ class CreateUsersTable extends Migration
         Schema::dropIfExists('users');
     }
 }
+?>
