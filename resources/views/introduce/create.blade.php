@@ -1,6 +1,4 @@
-@extends('layouts.introduce')
-@section('content')
-<form action="{{ route('introduce.store') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('introduce.store') }}" id="formData" method="POST" enctype="multipart/form-data">
  {!! csrf_field() !!}
     <div class="form-group">
          아이디 : <input type="text" name="userId" id ="userId" value="{{ old('userId') }}"></br>
@@ -13,6 +11,41 @@
 
     <div>
         <button type="submit" class=addBtn>저장하기</button>
+        <button type="button" class=clsBtn>취소</button>
     </div>
 </form>
-@stop
+<script>
+    $('.clsBtn').on('click', function(e){
+        $('.work').empty();
+    });
+
+    $.ajaxSetup({
+        headers:{
+            'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $('.addBtn').on('click', function(e){  
+        //GET form
+        //제이쿼리에서 .은 클래스 #은 id로 접근시 사용한다.
+        var form = $('#formData')[0]; // 뭐지이건
+
+        //Create an FormData object
+        var data = new FormData(form); // 뭔지모르겟다 
+        e.preventDefault();// 서브밋 행동취소(왜 쓰는지는 모르겟음)
+
+        $.ajax({
+            type: 'POST',
+            enctype: 'multipart/form-data',
+            url: '/introduce',
+            data: data, // 모르겠다
+            processData: false,
+            contentType: false,
+            cache: false, 
+            success : function(data){
+                get_list();// introduce에서 get_list함수를 호출 
+                $('.work').empty();
+            }
+        });
+    });
+</script>

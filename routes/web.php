@@ -11,11 +11,14 @@
 |
 */
 
+
+Route::get('/introduce/list', function(){
+    $introduces = \App\Member::all();
+    return $introduces;
+    // return 'aaa';
+  
+});
+ 
 Route::resource('introduce', 'IntroduceContoller');
 
-Route::view('introduce/edit' , 'edit');
-// Route::get('introduce/list', function(){
-//     $introduces = \App\User::all();
-//     return $introduces;
-// });
- 
+// Route::view('introduce/edit' , 'edit');
