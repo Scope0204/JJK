@@ -10,20 +10,31 @@
     </div>
     <div>
         <button type="submit" class=saveBtn data-id="{{$member->id}}">저장하기</button>
-        <button type="button" class=backBtn>취소</button>
+        <button type="button" class=clsBtn data-id="{{$member->id}}">삭제하기</button>
     </div>
 </form>
 
 <script>
-    $('.backBtn').on('click', function(e){
-        $('.work').empty();
-    });
-
     $.ajaxSetup({
         headers:{
             'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+    $('.clsBtn').on('click', function(e){
+        var clsId = $(this).attr('data-id');
+
+        if(confirm('삭제하시겠습니까?')){
+        $.ajax({
+            type: 'DELETE',
+            url: '/introduce/' + clsId
+            }).then(function() {
+                get_list();
+                $('.work').empty();
+            });
+         }
+    });
+    
     $('.saveBtn').on('click', function(e){  
         //GET form
         var form = $('#formData')[0];
