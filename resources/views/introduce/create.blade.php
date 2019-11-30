@@ -51,7 +51,10 @@
             success : function(data){
                 if($.isEmptyObject(data.error)){
                     if(data=="idx"){
-                        alert("id가 일치하지않습니다.");
+                        // alert("id가 일치하지않습니다.");
+                        $(".print-error-msg").find("ul").html('');
+                        $(".print-error-msg").find("ul").append('<li>'+"등록되지않은 ID입니다"+'</li>');
+                        $(".print-error-msg").show();
                     }
                     else{
                         console.log(data);

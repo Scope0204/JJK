@@ -43,7 +43,7 @@ class IntroduceContoller extends Controller
     {   
       
         $validator = \Validator::make($request->all(), [
-            'userId' => 'required',
+            'userId' => 'required|unique:members',
             'password' => 'required',
             'intro' => 'required',
             'goal' => 'required',
@@ -77,7 +77,8 @@ class IntroduceContoller extends Controller
                 "goal"=>$request->goal,
                 "photo"=>isset($filename) ? $filename : '이미지없음',
             ]);
-        }else{
+        }
+        else{
             return "idx";
         }
         
@@ -129,7 +130,6 @@ class IntroduceContoller extends Controller
             return response()->json(['error'=>$validator->errors()->all()]);
         }
     
-        $users = \App\User::where('userId',$request->userId)->first();
         $oldPhoto = \App\Member::where('id','=', $id)->first();
 
         if ($request->hasFile('photo')) {
@@ -145,12 +145,18 @@ class IntroduceContoller extends Controller
             }
         }
         
+        $users = \App\User::where('userId',$request->userId)->first();
+        if($users){
             $member = \App\Member::where('id',$id)->update([  
                 "userId"=>$request->userId, 
                 "intro"=>$request->intro,
                 "goal"=>$request->goal,
                 "photo"=>isset($filename) ? $filename : $oldPhoto->photo,
             ]);
+        }else{
+            return "idx";
+        }
+        
     }
     
     /**
@@ -164,7 +170,7 @@ class IntroduceContoller extends Controller
     {
         
         $oldPhoto = \App\Member::where('id','=', $id)->first(); 
-        if ($oldPhoto) {
+        if ($oldPhoto->photo != '이미지없음') {
         unlink(storage_path('../public/images/'.$oldPhoto->photo));
         }
 
