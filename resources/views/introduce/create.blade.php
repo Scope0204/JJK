@@ -1,17 +1,23 @@
 <form action="{{ route('introduce.store') }}" id="formData" method="POST" enctype="multipart/form-data">
  {!! csrf_field() !!}
+    <div class="print-error-msg" style="display:none">
+        <ul></ul>
+    </div>
     <div class="form-group">
-         아이디 : <input type="text" name="userId" id ="userId" value="{{ old('userId') }}" required>
-         <div class="check_id" id="id_check"></div>
-         </br>
-         비밀번호 : <input type="password" name="password" id ="password" value="{{ old('password') }}"></br>
-         자기소개 : <textarea cols='30' rows='5' name='intro'>{{ old('intro') }}</textarea></br>
-         목표 : <input type="text" name="goal" id ="goal" value="{{ old('goal') }}"></br>
-         사진 : <input type="file" name="photo" id="photo"></br>
-         
+        <P>아이디</P>
+        <textarea cols='30' rows='1' name="userId" id ="userId">{{ old('userId') }}</textarea>
+        <P>비밀번호</P>
+        <textarea cols='30' rows='1' name="password" id ="password">{{ old('password') }}</textarea>
+        <P>자기소개</P>
+        <textarea cols='30' rows='5' name='intro' id='intro'>{{ old('intro') }}</textarea>
+        <P>목표</P> 
+        <textarea cols='30' rows='5' name="goal" id ="goal">{{ old('goal') }}</textarea>
+        <p>사진</p> 
+        <input type="file" name="photo" id="photo">
     </div>
 
     <div>
+    </br>
         <button type="submit" class=addBtn>저장하기</button>
         <button type="button" class=clsBtn>취소</button>
     </div>
@@ -43,10 +49,29 @@
             contentType: false,
             cache: false, 
             success : function(data){
-                console.log(data);
-                get_list();// introduce에서 get_list함수를 호출 
-                $('.work').empty();
+                if($.isEmptyObject(data.error)){
+                    if(data=="idx"){
+                        alert("id가 일치하지않습니다.");
+                    }
+                    else{
+                        console.log(data);
+                        get_list();// introduce에서 get_list함수를 호출 
+                        $('.work').empty();
+                    }
+                }else{
+                    console.log(data.error);
+	                printErrorMsg(data.error);
+	            }    
             }
         });
     });
+
+
+    function printErrorMsg (msg) {
+			$(".print-error-msg").find("ul").html('');
+			$.each( msg, function( key, value ) {
+				$(".print-error-msg").find("ul").append('<li>'+value+'</li>');
+                $(".print-error-msg").show();
+			});
+		}
 </script>

@@ -41,11 +41,26 @@ class IntroduceContoller extends Controller
      */
     public function store(Request $request)
     {   
-        // $validation = Validator::make($request->all(),[
-        //     'userId' => 'required',
-        // ]);
+      
+        $validator = \Validator::make($request->all(), [
+            'userId' => 'required',
+            'password' => 'required',
+            'intro' => 'required',
+            'goal' => 'required',
+        ]);
 
+
+        // if ($validator->passes()) {
+		// 	return response()->json(['success'=>'Added new records.']);
+        // }
+
+        if ($validator->fails())
+        {
+            return response()->json(['error'=>$validator->errors()->all()]);
+        }
+    
         $users = \App\User::where('userId',$request->userId)->first();
+
 
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
@@ -55,16 +70,18 @@ class IntroduceContoller extends Controller
             $photo->move(attachements_path(),$filename);
             // 파일을 원하는 위치로 옮기는 구문
         }
-        if($users){
+        if($users){ //이거 user에 없는 id 어케 처리할지 생각하자
             $members = \App\Member::create([
                 "userId"=>$request->userId,
                 "intro"=>$request->intro,
                 "goal"=>$request->goal,
-                "photo"=>isset($filename) ? $filename : '',
+                "photo"=>isset($filename) ? $filename : '이미지없음',
             ]);
-
+        }else{
+            return "idx";
         }
-    
+        
+
     }
 
     /**
@@ -101,8 +118,18 @@ class IntroduceContoller extends Controller
     public function update(Request $request, $id)
     {
 
-        // $users = \App\User::where('userId',$request->userId)->first();
-      
+        $validator = \Validator::make($request->all(), [
+            'userId' => 'required',
+            'intro' => 'required',
+            'goal' => 'required',
+        ]);
+
+        if ($validator->fails())
+        {
+            return response()->json(['error'=>$validator->errors()->all()]);
+        }
+    
+        $users = \App\User::where('userId',$request->userId)->first();
         $oldPhoto = \App\Member::where('id','=', $id)->first();
 
         if ($request->hasFile('photo')) {
@@ -117,11 +144,11 @@ class IntroduceContoller extends Controller
                 //unlink : 파일삭제 storage_path: 주어진 파일의 절대경로 반환
             }
         }
-
+        
             $member = \App\Member::where('id',$id)->update([  
                 "userId"=>$request->userId, 
-                "intro"=>$request->intro, //1111
-                "goal"=>$request->goal, //1111
+                "intro"=>$request->intro,
+                "goal"=>$request->goal,
                 "photo"=>isset($filename) ? $filename : $oldPhoto->photo,
             ]);
     }
