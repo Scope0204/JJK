@@ -8,6 +8,8 @@
         <textarea cols='30' rows='1' name="userId" id ="userId">{{ old('userId') }}</textarea>
         <P>비밀번호</P>
         <textarea cols='30' rows='1' name="password" id ="password">{{ old('password') }}</textarea>
+        <P>이름</P>
+        <textarea cols='30' rows='5' name='name' id='name'>{{ old('name') }}</textarea>
         <P>자기소개</P>
         <textarea cols='30' rows='5' name='intro' id='intro'>{{ old('intro') }}</textarea>
         <P>목표</P> 

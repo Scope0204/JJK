@@ -17,7 +17,7 @@ class IntroduceContoller extends Controller
   
     public function index()
     {            
-        $members = \App\Member::all();                       
+
         return view('introduce.index');
     }
 
@@ -43,23 +43,20 @@ class IntroduceContoller extends Controller
     {   
       
         $validator = \Validator::make($request->all(), [
-            'userId' => 'required|unique:members',
+            // 'userId' => 'required|unique:members',
+            'userId' => 'required',
             'password' => 'required',
+            'name' => 'required',
             'intro' => 'required',
             'goal' => 'required',
         ]);
-
-
-        // if ($validator->passes()) {
-		// 	return response()->json(['success'=>'Added new records.']);
-        // }
 
         if ($validator->fails())
         {
             return response()->json(['error'=>$validator->errors()->all()]);
         }
     
-        $users = \App\User::where('userId',$request->userId)->first();
+        
 
 
         if ($request->hasFile('photo')) {
@@ -70,9 +67,14 @@ class IntroduceContoller extends Controller
             $photo->move(attachements_path(),$filename);
             // 파일을 원하는 위치로 옮기는 구문
         }
-        if($users){ //이거 user에 없는 id 어케 처리할지 생각하자
+
+        $users = \App\User::where('userId',$request->userId)->where('password',$request->password)->first(); //여기에 where('admin',1) 추가 
+        //$users 는 id와 password를 검사함 
+        //password 암호화 뚫는걸로 고쳐야함
+        
+        if($users){
             $members = \App\Member::create([
-                "userId"=>$request->userId,
+                "name"=>$request->name,
                 "intro"=>$request->intro,
                 "goal"=>$request->goal,
                 "photo"=>isset($filename) ? $filename : '이미지없음',
@@ -120,7 +122,7 @@ class IntroduceContoller extends Controller
     {
 
         $validator = \Validator::make($request->all(), [
-            'userId' => 'required',
+            'name' => 'required',
             'intro' => 'required',
             'goal' => 'required',
         ]);
@@ -145,10 +147,11 @@ class IntroduceContoller extends Controller
             }
         }
         
-        $users = \App\User::where('userId',$request->userId)->first();
+        $users = \App\User::where('userId',$request->userId)->where('password',$request->password)->first();
+
         if($users){
             $member = \App\Member::where('id',$id)->update([  
-                "userId"=>$request->userId, 
+                "name"=>$request->name, 
                 "intro"=>$request->intro,
                 "goal"=>$request->goal,
                 "photo"=>isset($filename) ? $filename : $oldPhoto->photo,

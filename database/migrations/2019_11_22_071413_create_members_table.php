@@ -17,12 +17,12 @@ class CreateMembersTable extends Migration
         Schema::create('members', function (Blueprint $table) {
             $table->bigIncrements('id'); //오토
             //$table->unsignedBigInteger('userId')->primary(); 
-            $table->string('userId')->unique(); //원래 id 값 
+            $table->string('name'); //이름 
             $table->string('intro'); // 자기소개 
             $table->string('goal'); // 목표 
             $table->string('photo')->nullable();//사진
             $table->timestamps();
-            $table->foreign('userId')->references('userId')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            // $table->foreign('userId')->references('userId')->on('users')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

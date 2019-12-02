@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Member extends Model
 {
     protected $fillable = [
-        'userId','intro' , 'goal' ,'photo'
+        'name','intro' , 'goal' ,'photo'
     ];
 }
